@@ -1,0 +1,41 @@
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        int i = 0;
+        while(i < nums.length){
+            int j = i + 1;
+            while(j < nums.length){
+                long t = (long)target - (long)(nums[i] + nums[j]);
+                int l = j + 1;
+                int r = nums.length - 1;
+                while(l < r){
+                    long sum = (long)nums[l] + (long)nums[r];
+                    if(sum == t){
+                        List<Integer> al = new ArrayList<>();
+                        al.add(nums[i]);
+                        al.add(nums[j]);
+                        al.add(nums[l]);
+                        al.add(nums[r]);
+                        ans.add(al);
+                        l++;
+                        while(l < nums.length &&nums[l] == nums[l - 1])l++;
+                        r--;
+                        while(r >= 0 && nums[r] == nums[r + 1] )r--;
+                    }else if(sum < t){
+                        l++;
+                         while(l < nums.length &&nums[l] == nums[l - 1])l++;
+                    }else{
+                        r--;
+                         while(r >= 0 && nums[r] == nums[r + 1] )r--;
+                    }
+                }
+                j++;
+                while(j < nums.length && nums[j] == nums[j - 1])j++;
+            }
+            i++;
+            while(i < nums.length && nums[i] == nums[i - 1])i++;
+        }   
+        return ans;
+    }
+}
