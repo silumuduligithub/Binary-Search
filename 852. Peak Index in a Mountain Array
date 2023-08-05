@@ -1,0 +1,31 @@
+class Solution {
+    public int peakIndexInMountainArray(int[] nums) {
+        int low = 0, high = nums.length - 1;
+        while(low <= high){
+            int mid = (low + high)/2;
+            // I am first position of the array and don't have left element 
+            if(mid == 0){
+                // first here we check am the peak element
+                if(nums[mid] > nums[mid + 1])return mid;
+                //hense i am present the left most side of the array and i am not the peak so peak is present another side of the array i.e right side
+                else 
+                    low = mid + 1;
+            }
+            // if I am present the right most side of the array 
+            else if(mid == nums.length - 1){
+                // first we check i am the peak
+                if(nums[mid] > nums[mid - 1])return mid;
+                // hense i am not the peak and i am the right most element of the array so the peak is present the another side of the array i.e left side
+                high = mid - 1;
+            }else{
+                // am I the peak
+                if(nums[mid] > nums[mid - 1] && nums[mid] > nums[mid + 1])return mid;
+                //if my left part is sorted that means peak is present in another part i.e right part
+                else if(nums[mid - 1] <= nums[mid])low = mid + 1;
+                // if right part is sorted that means peak is present in another part i.e left part
+                else high = mid - 1;
+            }
+        }
+        return -1; 
+    }
+}
