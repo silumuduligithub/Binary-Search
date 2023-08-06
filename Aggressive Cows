@@ -1,0 +1,38 @@
+class Solution {
+    public static boolean possibleToPlace(int[] stalls, int cows, int minDist){
+        int cowsPlaced = 1;
+        int lastPositionDistance = stalls[0];
+        for(int i = 1; i < stalls.length; i++){
+            if((stalls[i] - lastPositionDistance) >= minDist){
+                cowsPlaced++;
+                lastPositionDistance = stalls[i];
+            }
+        }
+        return cowsPlaced >= cows;
+    }
+    public static int solve(int n, int k, int[] stalls) {
+        // we sort the array so that we can get a clear picture which cow has threat from
+        // which cow, and we can easily place them accoring to their position
+        Arrays.sort(stalls);
+        // we don't need to find the minimum distance lets assume the minimum distance is 1
+        int lo = 1;
+        // total distance between them 
+        int hi = stalls[n - 1] - stalls[0];
+        int ans = 0;
+        while(lo <= hi){
+            int mid = (lo + hi) / 2;
+            if(possibleToPlace(stalls, k, mid)){
+                // if it is possible to place then this can be my potential answer 
+                // as we want the maximum distance between them so we need to increase our distance so move to right
+                // this is my potential answer
+                ans = mid;
+                lo = mid + 1;
+            }
+            // if it is not possible to place so decrease the distance
+            else{
+                hi = mid - 1;
+            }
+        }
+        return ans;
+    }
+}
