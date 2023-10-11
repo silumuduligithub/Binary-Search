@@ -1,0 +1,49 @@
+class Solution {
+    public int binarySearch1(int[] arr, int day){
+        int start = 0, end = arr.length - 1;
+        int curAns = -1;
+        while(start <= end){
+            int mid = (start + end) / 2;
+            if(arr[mid] <= day){
+                curAns = mid;
+                start = mid + 1;
+            }else{
+                end = mid - 1;
+            }
+        }
+        return curAns == -1 ? 0 : curAns + 1;
+    }
+
+     public int binarySearch2(int[] arr, int day){
+        int start = 0, end = arr.length - 1;
+        int curAns = -1;
+        while(start <= end){
+            int mid = (start + end) / 2;
+            if(arr[mid] < day){
+                curAns = mid;
+                start = mid + 1;
+            }else{
+                end = mid - 1;
+            }
+        }
+        return curAns == -1 ? 0 : curAns + 1;
+    }
+    public int[] fullBloomFlowers(int[][] flowers, int[] people) {
+        int[] startDay = new int[flowers.length];
+        int[] endDay = new int[flowers.length];
+        for(int i = 0; i < flowers.length; i++){
+            startDay[i] = flowers[i][0];
+            endDay[i] = flowers[i][1];  
+        }
+        Arrays.sort(startDay);
+        Arrays.sort(endDay);
+        int[] ans = new int[people.length];
+        for(int i = 0; i < people.length; i++){
+           int bloomFlowers = binarySearch1(startDay, people[i]);
+           int decilneFlowers = binarySearch2(endDay, people[i]);
+           System.out.println(bloomFlowers+" "+decilneFlowers);
+           ans[i] = bloomFlowers - decilneFlowers;
+        }
+        return ans;
+    }
+}
