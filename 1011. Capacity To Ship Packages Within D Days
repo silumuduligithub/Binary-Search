@@ -1,0 +1,36 @@
+class Solution {
+    public boolean isPossible(int[] weights, int days, int wt){
+        int dayCount = 0, curWt = 0;
+        for(int i = 0; i < weights.length; i++){
+            curWt += weights[i];
+            if(curWt == wt){
+                dayCount++;
+                curWt = 0;
+            }else if(curWt > wt){
+                dayCount++;
+                curWt = weights[i];
+            }
+        }
+        if(curWt > 0)dayCount++;
+        return dayCount <= days;
+    }
+    public int shipWithinDays(int[] weights, int days) {
+        int capacity = 0;
+        int max = Integer.MIN_VALUE;
+        for(int w : weights){
+            capacity += w;
+            max = Math.max(max, w);
+        }
+        int low = max, high = capacity, ans = - 1;
+        while(low <= high){
+            int mid = (low + high) / 2;
+            if(isPossible(weights, days, mid)){
+                ans = mid;
+                high = mid - 1;
+            }else{
+                low = mid + 1;
+            }
+        }
+        return ans;
+    }
+}
