@@ -1,0 +1,27 @@
+class Solution {
+    public boolean isPossible(int sph, int k, int[] piles){
+        long count = 0;
+        for(int banana : piles){
+           if(banana % sph == 0) 
+                count += banana / sph;
+            else
+                count += ((banana / sph) + 1);
+        }
+        return count <= k;
+    }
+    public int minEatingSpeed(int[] piles, int h) {
+        Arrays.sort(piles);
+        int low = 1, high = piles[piles.length - 1];
+        int ans = 0;
+        while(low <= high){
+            int mid = (low + high) / 2;
+            if(isPossible(mid, h, piles)){
+                ans = mid;
+                high = mid - 1;
+            }else{
+                low = mid + 1;
+            }
+        }  
+        return ans; 
+    }
+}
