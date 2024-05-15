@@ -1,0 +1,87 @@
+class Solution {
+    class Pair{
+        int row;
+        int col;
+        Pair(int row, int col){
+            this.row = row;
+            this.col = col;
+        }
+    }
+    public boolean isSafe(int i, int j, boolean[][] vis){
+        if(i < 0 || j < 0 || i >= vis.length || j >= vis[0].length || vis[i][j])return false;
+        return true;
+    }
+    public int calculateDistance(List<List<Integer>> grid, int[][] dist, int[][] dir){
+        Queue<Pair> que = new LinkedList<>();
+        for(int i = 0; i < grid.size(); i++){
+            for(int j = 0; j < grid.get(0).size(); j++){
+                if(grid.get(i).get(j) == 1){
+                    que.add(new Pair(i, j));
+                }
+            }
+        } 
+        boolean[][] vis = new boolean[grid.size()][grid.get(0).size()];
+        int count = 0;
+        while(que.size() > 0){
+            int size = que.size();
+            while(size-- > 0){
+                Pair rpair = que.remove();
+                if(vis[rpair.row][rpair.col])continue;
+                vis[rpair.row][rpair.col] = true;
+                dist[rpair.row][rpair.col] = count;
+                for(int[] d : dir){
+                    int curRow = d[0] + rpair.row;
+                    int curCol = d[1] + rpair.col;
+                    if(isSafe(curRow, curCol, vis)){
+                        que.add(new Pair(curRow, curCol));
+                    }
+                }
+            }
+            count++;
+        }
+        return count;
+    }
+    
+    public boolean isPossible(int target, int[][] dist, int[][] dir){
+        if(dist[0][0] < target)return false;
+        Queue<Pair> que = new LinkedList<>();
+        boolean[][] vis = new boolean[dist.length][dist[0].length];
+        que.add(new Pair(0, 0));
+        while(que.size() > 0){
+            Pair rpair = que.remove();
+            if(vis[rpair.row][rpair.col])continue;
+            vis[rpair.row][rpair.col] = true;
+            if(rpair.row == dist.length - 1 && rpair.col == dist[0].length - 1){
+                return true;
+            }
+            for(int[] d : dir){
+                int curRow = d[0] + rpair.row;
+                int curCol = d[1] + rpair.col;
+                if(isSafe(curRow, curCol, vis) && dist[curRow][curCol] >= target){
+                    que.add(new Pair(curRow, curCol));
+                }
+            }
+        }
+        return false;
+    }
+
+    public int binarySearch(int maxDist, int[][] dist, int[][] dir){
+        int low = 0, high = maxDist, ans = 0;
+        while(low <= high){
+            int mid = (low + high)/2;
+            if(isPossible(mid, dist, dir)){
+                ans = mid;
+                low = mid + 1;
+            }else{
+                high = mid - 1;
+            }
+        }
+        return ans;
+    }
+    public int maximumSafenessFactor(List<List<Integer>> grid) {
+        int[][] dist = new int[grid.size()][grid.get(0).size()];
+        int[][] dir = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+        int maxDist = calculateDistance(grid, dist, dir);
+        return binarySearch(maxDist, dist, dir);
+    }
+}
